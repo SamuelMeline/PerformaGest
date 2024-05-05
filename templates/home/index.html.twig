@@ -1,0 +1,61 @@
+{# templates/home/index.html.twig #}
+
+{% extends 'base.html.twig' %}
+
+{% block title %}Accueil
+{% endblock %}
+
+{% block body %}
+	<div class="container home">
+		<h1>Bienvenue sur notre application</h1>
+		<p>Ceci est la page d'accueil de notre application Symfony.</p>
+		<p>Vous pouvez commencer par naviguer à travers les différentes fonctionnalités :</p>
+
+		{# Inscrivez vous ou connectez vous #}
+		{% if not app.user %}
+			<div class="flex connexion">
+				<ul>
+					<li><ahref="{{ path('app_register') }}">S'Inscrire</a></li>
+					<li><ahref="{{ path('app_login') }}">Se Connecter</a></li>
+				</ul>
+			</div>
+		{% endif %}
+
+		<!-- Si l'utilisateur est connecté -->
+		{% if app.user %}
+			<div class="flex">
+				<ul class="disabled">
+					<li>
+						<a href="{{ path('app_produits_index') }}">Liste des produits</a>
+					</li>
+				</ul>
+				<ul class="disabled">
+					<li>
+						<a href="{{ path('app_produits_new') }}">Créer un nouveau produit</a>
+					</li>
+				</ul>
+				<ul>
+					<li>
+						<a href="{{ path('app_ventes_liste') }}">Liste des ventes</a>
+					</li>
+				</ul>
+			</div>
+		{% endif %}
+	</div>
+{% endblock %}
+{% block javascripts %}
+	<script>
+		document.addEventListener('DOMContentLoaded', function () {
+const closeButton = document.querySelector('.btn-close');
+if (closeButton) {
+closeButton.addEventListener('click', function () { // Trouvez l'élément parent de l'alerte
+const alert = this.closest('.alert');
+// Masquer l'alerte en ajoutant la classe 'd-none' si l'élément parent existe
+if (alert) {
+alert.classList.add('d-none');
+}
+});
+}
+});
+	</script>
+{% endblock %}

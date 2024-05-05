@@ -3,43 +3,57 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
-class User
+#[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
+#[UniqueEntity(fields: ['email'], message: 'Il existe déjà un compte avec cet email.')]
+class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $name = null;
-
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 180)]
+    #[Assert\NotBlank()]
     private ?string $email = null;
 
-    #[ORM\Column(length: 255)]
+    /**
+     * @var list<string> The user roles
+     */
+    #[ORM\Column]
+    private array $roles = [];
+
+    public function __construct() {
+       return $this->roles = ['ROLE_USER'];
+    //    $this->produits = new ArrayCollection();
+    }
+
+    /**
+     * @var string The hashed password
+     */
+    #[ORM\Column]
     private ?string $password = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $pseudo = null;
+    // #[ORM\Column(type: 'boolean')]
+    // private $isVerified = false;
+
+    // /**
+    //  * @var Collection<int, Produits>
+    //  */
+    // #[ORM\OneToMany(targetEntity: Produits::class, mappedBy: 'user')]
+    // private Collection $produits;
 
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getName(): ?string
-    {
-        return $this->name;
-    }
-
-    public function setName(string $name): static
-    {
-        $this->name = $name;
-
-        return $this;
     }
 
     public function getEmail(): ?string
@@ -54,7 +68,44 @@ class User
         return $this;
     }
 
-    public function getPassword(): ?string
+    /**
+     * A visual identifier that represents this user.
+     *
+     * @see UserInterface
+     */
+    public function getUserIdentifier(): string
+    {
+        return (string) $this->email;
+    }
+
+    /**
+     * @see UserInterface
+     *
+     * @return list<string>
+     */
+    public function getRoles(): array
+    {
+        $roles = $this->roles;
+        // guarantee every user at least has ROLE_USER
+        $roles[] = 'ROLE_USER';
+
+        return array_unique($roles);
+    }
+
+    /**
+     * @param list<string> $roles
+     */
+    public function setRoles(array $roles): static
+    {
+        $this->roles = $roles;
+
+        return $this;
+    }
+
+    /**
+     * @see PasswordAuthenticatedUserInterface
+     */
+    public function getPassword(): string
     {
         return $this->password;
     }
@@ -66,15 +117,54 @@ class User
         return $this;
     }
 
-    public function getPseudo(): ?string
+    /**
+     * @see UserInterface
+     */
+    public function eraseCredentials(): void
     {
-        return $this->pseudo;
+        // If you store any temporary, sensitive data on the user, clear it here
+        // $this->plainPassword = null;
     }
 
-    public function setPseudo(string $pseudo): static
-    {
-        $this->pseudo = $pseudo;
+    // public function isVerified(): bool
+    // {
+    //     return $this->isVerified;
+    // }
 
-        return $this;
-    }
+    // public function setVerified(bool $isVerified): static
+    // {
+    //     $this->isVerified = $isVerified;
+
+    //     return $this;
+    // }
+
+    // /**
+    //  * @return Collection<int, Produits>
+    //  */
+    // public function getProduits(): Collection
+    // {
+    //     return $this->produits;
+    // }
+
+    // public function addProduit(Produits $produit): static
+    // {
+    //     if (!$this->produits->contains($produit)) {
+    //         $this->produits->add($produit);
+    //         $produit->setUser($this);
+    //     }
+
+    //     return $this;
+    // }
+
+    // public function removeProduit(Produits $produit): static
+    // {
+    //     if ($this->produits->removeElement($produit)) {
+    //         // set the owning side to null (unless already changed)
+    //         if ($produit->getUser() === $this) {
+    //             $produit->setUser(null);
+    //         }
+    //     }
+
+    //     return $this;
+    // }
 }

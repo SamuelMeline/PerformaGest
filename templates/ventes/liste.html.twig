@@ -1,0 +1,31 @@
+<table>
+	<thead>
+		<tr>
+			<th>Date</th>
+			<th>Montant facturé</th>
+			<th>Employé</th>
+			<th>Type</th>
+			<th>Réduction</th>
+			<th>Autocalcul</th>
+			<th>Mon/Mes produit(s)</th>
+			<th>Commentaires</th>
+		</tr>
+	</thead>
+	<tbody
+		id="table-body">
+		<!-- Les données seront ajoutées ici dynamiquement -->
+		{# {% for produit in produits %}
+			<tr>
+				<td>{{ produit.createdAt|date('Y-m-d') }}</td>
+				<td>{{ produit.price }}</td>
+				<td>{{ produit.user.name }}</td>
+				<td>{{ produit.type }}</td>
+				<td>{{ produit.reduction }}</td>
+				<td>{{ produit.price * produit.quantity }}</td>
+				<td>{{ produit.name }}</td>
+				<td>{{ produit.comment }}</td>
+			</tr>
+		{% endfor %} #}
+
+	</tbody>
+</table>
