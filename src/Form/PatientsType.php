@@ -2,7 +2,7 @@
 
 namespace App\Form;
 
-use App\Entity\Produits;
+use App\Entity\Patients;
 use App\Entity\Categories;
 use App\Entity\References;
 use App\Entity\Distributeurs;
@@ -16,26 +16,35 @@ use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use PHPUnit\TextUI\XmlConfiguration\CodeCoverage\Report\Text;
 
-class ProduitsType extends AbstractType
+class PatientsType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('name', TextType::class, [
-                'label' => 'Nom du produit',
+                'label' => 'Nom du Patient',
             ])
-            ->add('description', TextareaType::class)
-            ->add('image', FileType::class, [
-                'label' => 'Image du produit',
-                'mapped' => false, // Indique à Symfony de ne pas mapper ce champ à une propriété de l'entité
-                'required' => false, // Le champ n'est pas obligatoire
+            ->add('firstname', TextType::class, [
+                'label' => 'Prénom du Patient',
             ])
-            ->add('price', MoneyType::class, [
-                'currency' => 'EUR',
-                'label' => 'Prix du produit',
+            ->add('age', TextType::class, [
+                'label' => 'Age du Patient',
             ])
-            ->add('slug', TextType::class, [
-                'label' => 'URL du produit',
+            ->add('phone', TextType::class, [
+                'label' => 'Téléphone du Patient',
+            ])
+            ->add('contact_urgence', TextType::class, [
+                'label' => 'Contact d\'urgence',
+            ])
+            // Autoriser les caractères spéciaux du groupe sanguin
+            ->add('groupe_sanguin', TextType::class, [
+                'label' => 'Groupe Sanguin',
+            ])
+            ->add('taille', TextType::class, [
+                'label' => 'Taille',
+            ])
+            ->add('poids', TextType::class, [
+                'label' => 'Poids',
             ])
         ;
     }
@@ -43,7 +52,7 @@ class ProduitsType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => Produits::class,
+            'data_class' => Patients::class,
         ]);
     }
 }

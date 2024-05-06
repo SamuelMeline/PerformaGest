@@ -15,8 +15,8 @@
 		{% if not app.user %}
 			<div class="flex connexion">
 				<ul>
-					<li><ahref="{{ path('app_register') }}">S'Inscrire</a></li>
-					<li><ahref="{{ path('app_login') }}">Se Connecter</a></li>
+					<li><ahref="{{path('app_register')}}">S'Inscrire</a></li>
+					<li><ahref="{{path('app_login')}}">Se Connecter</a></li>
 				</ul>
 			</div>
 		{% endif %}
@@ -25,18 +25,36 @@
 		{% if app.user %}
 			<div class="flex">
 				<ul class="disabled">
+					<h3>Patients</h3>
 					<li>
-						<a href="{{ path('app_produits_index') }}">Liste des produits</a>
+						<a href="{{ path('app_patients_index') }}">dossier médicaux</a>
+					</li>
+					<li>
+						<a href="{{ path('app_patients_index') }}">calendrier de rendez-vous</a>
 					</li>
 				</ul>
 				<ul class="disabled">
+					<h3>Fiches</h3>
 					<li>
-						<a href="{{ path('app_produits_new') }}">Créer un nouveau produit</a>
+						<a href="{{ path('app_patients_new') }}">Spécialités</a>
+					</li>
+					<li>
+						<a href="{{ path('app_patients_new') }}">Formations</a>
+					</li>
+					<li>
+						<a href="{{ path('app_patients_new') }}">Nouvelles fiches à valider</a>
 					</li>
 				</ul>
-				<ul>
+				<ul class="disabled">
+					<h3>Administration</h3>
 					<li>
-						<a href="{{ path('app_ventes_liste') }}">Liste des ventes</a>
+						<a href="{{ path('app_ventes_liste') }}">Dispatch</a>
+					</li>
+					<li>
+						<a href="{{ path('app_ventes_liste') }}">Divers</a>
+					</li>
+					<li>
+						<a href="{{ path('app_ventes_liste') }}">Direction (réservé au comité de direction)</a>
 					</li>
 				</ul>
 			</div>
