@@ -1,47 +1,16 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}
-	patients
-{% endblock %}
+{% block title %}Dossiers Médicaux{% endblock %}
 
 {% block body %}
-	<div class="container">
-		<h1>patients</h1>
+    <h1>Dossiers Médicaux</h1>
+    <div class="alphabet">
+        {% for letter in letters %}
+            <a href="{{ path('app_patients_by_letter', {letter: letter}) }}">{{ letter }}</a>
+        {% endfor %}
+    </div>
 
-		<div class="row">
-			{% for patient in patients %}
-				<div class="col-md-3 mb-4">
-					<div class="card">
-						<div class="card-body">
-							<h5 class="card-title">{{ patient.name }} {{ patient.firstname }}</h5>
-							
-							<p class="card-text">Créé le:
-								{# Date et heure  #}
-								{{ patient.createdAt|date('d/m/Y H:i') }}
-							</p>
-							<p class="card-text">Mis a jour le :
-								{# Date et heure  #}
-								{{ patient.updatedAt|date('d/m/Y H:i') }}
-							</p>
-							<div class="flex boutton-card">
-								<a href="{{ path('app_patients_show', {'id': patient.id}) }}" class="btn btn-primary">Voir</a>
-								<a href="{{ path('app_patients_edit', {'id': patient.id}) }}" class="btn btn-warning">Modifier</a>
-								{{ include('patients/_delete_form.html.twig') }}
-							</div>
-						</div>
-					</div>
-				</div>
-			{% else %}
-				<div class="col">
-					<p>Aucun patient trouvé.</p>
-				</div>
-			{% endfor %}
-		</div>
-		<a class="btn btn-success" href="{{ path('app_patients_new') }}">Créer un nouveau patient</a>
-		<a class="btn btn-secondary" href="{{ path('app_home') }}">Retour à l'accueil</a>
-		{# Si on est sur /categorie-patient afficher le boutton #}
-		{% if app.request.attributes.get('_route') == 'app_patients_categorie' %}
-			<a class="btn btn-secondary" href="{{ path('app_patients_index') }}">Retour à tous les patients</a>
-		{% endif %}
-	</div>
+    <div class="new-patient">
+        <a href="{{ path('app_patient_new') }}" class="btn btn-primary">Créer un nouveau dossier médical</a>
+    </div>
 {% endblock %}

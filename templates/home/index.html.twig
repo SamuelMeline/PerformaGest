@@ -15,8 +15,8 @@
 		{% if not app.user %}
 			<div class="flex connexion">
 				<ul>
-					<li><ahref="{{path('app_register')}}">S'Inscrire</a></li>
-					<li><ahref="{{path('app_login')}}">Se Connecter</a></li>
+					<li><a href="{{path('app_register')}}">S'Inscrire</a></li>
+					<li><a href="{{path('app_login')}}">Se Connecter</a></li>
 				</ul>
 			</div>
 		{% endif %}
@@ -36,13 +36,13 @@
 				<ul class="disabled">
 					<h3>Fiches</h3>
 					<li>
-						<a href="{{ path('app_patients_new') }}">Spécialités</a>
+						<a href="{{ path('app_patient_new') }}">Spécialités</a>
 					</li>
 					<li>
-						<a href="{{ path('app_patients_new') }}">Formations</a>
+						<a href="{{ path('app_patient_new') }}">Formations</a>
 					</li>
 					<li>
-						<a href="{{ path('app_patients_new') }}">Nouvelles fiches à valider</a>
+						<a href="{{ path('app_patient_new') }}">Nouvelles fiches à valider</a>
 					</li>
 				</ul>
 				<ul class="disabled">

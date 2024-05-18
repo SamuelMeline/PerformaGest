@@ -2,55 +2,58 @@
 
 namespace App\Controller;
 
-use App\Entity\Patients;
+use App\Entity\Patient;
+use App\Form\PatientType;
 use App\Form\PatientsType;
-use Doctrine\ORM\EntityManager;
-use App\Repository\PatientsRepository;
+use App\Repository\PatientRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Security;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\File\Exception\FileException;
-use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 #[Route('/patients')]
 class PatientsController extends AbstractController
 {
     private $security;
-    private $imagesDirectory;
 
-    public function __construct(Security $security, ParameterBagInterface $parameterBag)
+    public function __construct(SecurityController $security)
     {
         $this->security = $security;
-        $this->imagesDirectory = $parameterBag->get('images_directory');
     }
 
     #[Route('/', name: 'app_patients_index', methods: ['GET'])]
-    public function index(
-        PatientsRepository $patientsRepository,
-    ): Response {
-        $user = $this->getUser();
+    public function index(PatientRepository $patientRepository): Response
+    {
+        $letters = range('A', 'Z');
+        $patients = $patientRepository->findAll();
+
         return $this->render('patients/index.html.twig', [
-            'patients' => $patientsRepository->findBy(['user' => $user]),
+            'letters' => $letters,
+            'patients' => $patients,
         ]);
     }
 
-    #[Route('/new', name: 'app_patients_new', methods: ['GET', 'POST'])]
+    #[Route('/letter/{letter}', name: 'app_patients_by_letter', methods: ['GET'])]
+    public function patientsByLetter(PatientRepository $patientRepository, string $letter): Response
+    {
+        $patients = $patientRepository->findByLetter($letter);
+
+        return $this->render('patients/by_letter.html.twig', [
+            'patients' => $patients,
+            'letter' => $letter,
+        ]);
+    }
+
+    #[Route('/new', name: 'app_patient_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
-        $user = $this->security->getUser();
-        $patient = new Patients();
-        $form = $this->createForm(PatientsType::class, $patient);
+        $patient = new Patient();
+        $form = $this->createForm(PatientType::class, $patient);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-
-            // Associer l'utilisateur actuel au patient
-            $user = $this->security->getUser();
-            $patient->setUser($user);
 
             $entityManager->persist($patient);
             $entityManager->flush();
@@ -60,13 +63,12 @@ class PatientsController extends AbstractController
 
         return $this->render('patients/new.html.twig', [
             'patient' => $patient,
-            'form' => $form->createView(),
+            'form' => $form,
         ]);
     }
 
-
     #[Route('/details-patient/{id}', name: 'app_patients_show', methods: ['GET'])]
-    public function show(Patients $patient): Response
+    public function show(Patient $patient): Response
     {
         return $this->render('patients/show.html.twig', [
             'patient' => $patient,
@@ -74,9 +76,9 @@ class PatientsController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'app_patients_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Patients $patient, EntityManagerInterface $entityManager): Response
+    public function edit(Request $request, Patient $patient, EntityManagerInterface $entityManager): Response
     {
-        $form = $this->createForm(PatientsType::class, $patient);
+        $form = $this->createForm(PatientType::class, $patient);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -92,7 +94,7 @@ class PatientsController extends AbstractController
     }
 
     #[Route('/supprimer-patient/{id}', name: 'app_patients_delete', methods: ['POST'])]
-    public function delete(Request $request, Patients $patient, EntityManagerInterface $entityManager): Response
+    public function delete(Request $request, Patient $patient, EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete' . $patient->getId(), $request->getPayload()->get('_token'))) {
             $entityManager->remove($patient);
