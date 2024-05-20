@@ -4,23 +4,21 @@ namespace App\Controller;
 
 use App\Entity\Patient;
 use App\Form\PatientType;
-use App\Form\PatientsType;
+use App\Entity\EmergencyContact;
 use App\Repository\PatientRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Security\Core\Security;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Doctrine\Persistence\ManagerRegistry;
+
 
 #[Route('/patients')]
 class PatientsController extends AbstractController
 {
-    private $security;
-
-    public function __construct(SecurityController $security)
+    public function __construct(private ManagerRegistry $doctrine)
     {
-        $this->security = $security;
     }
 
     #[Route('/', name: 'app_patients_index', methods: ['GET'])]
@@ -50,22 +48,22 @@ class PatientsController extends AbstractController
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
         $patient = new Patient();
-        $form = $this->createForm(PatientType::class, $patient);
+
+        $form = $this->createForm(PatientType::class, $patient); // Utilisez PatientType
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-
             $entityManager->persist($patient);
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_patients_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_patients_index');
         }
 
         return $this->render('patients/new.html.twig', [
-            'patient' => $patient,
-            'form' => $form,
+            'form' => $form->createView(),
         ]);
     }
+
 
     #[Route('/details-patient/{id}', name: 'app_patients_show', methods: ['GET'])]
     public function show(Patient $patient): Response
@@ -89,18 +87,42 @@ class PatientsController extends AbstractController
 
         return $this->render('patients/edit.html.twig', [
             'patient' => $patient,
-            'form' => $form,
+            'form' => $form->createView(),
+            'emergencyContacts' => $patient->getEmergencyContacts()
         ]);
     }
-
-    #[Route('/supprimer-patient/{id}', name: 'app_patients_delete', methods: ['POST'])]
-    public function delete(Request $request, Patient $patient, EntityManagerInterface $entityManager): Response
+    #[Route('/patients/{id}/delete/{contactID}', name: 'app_patients_supprimer_contact')]
+    public function deleteEmergencyContact(Patient $patient, EmergencyContact $contactID, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete' . $patient->getId(), $request->getPayload()->get('_token'))) {
-            $entityManager->remove($patient);
+        // Vérifier que le contact d'urgence est bien associé au patient
+        if ($patient->getEmergencyContacts()->contains($contactID)) {
+            $patient->removeEmergencyContact($contactID);
+            $entityManager->remove($contactID);
             $entityManager->flush();
         }
 
-        return $this->redirectToRoute('app_patients_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_patients_edit', ['id' => $patient->getId()]);
+    }
+
+    // Modifiez votre route pour autoriser les requêtes GET et POST
+    #[Route('/supprimer-patient/{id}', name: 'app_patients_delete', methods: ['GET', 'POST'])]
+    public function delete(Request $request, Patient $patient, EntityManagerInterface $entityManager): Response
+    {
+        // Vérifiez si la requête est POST
+        if ($request->isMethod('POST')) {
+            // Vérifiez le jeton CSRF
+            if ($this->isCsrfTokenValid('delete' . $patient->getId(), $request->request->get('_token'))) {
+                $entityManager->remove($patient);
+                $entityManager->flush();
+            }
+
+            $this->addFlash('success', 'Patient supprimé avec succès');
+
+            return $this->redirectToRoute('app_patients_index', [], Response::HTTP_SEE_OTHER);
+        }
+
+        // Si la requête n'est pas POST, redirigez ou renvoyez une erreur, selon votre logique
+        // Par exemple, vous pouvez rediriger vers une autre page avec un message d'erreur
+        return $this->redirectToRoute('app_patients_index');
     }
 }

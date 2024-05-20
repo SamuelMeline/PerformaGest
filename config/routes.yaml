@@ -16,3 +16,6 @@ admin_update_role:
     path: /admin/update-role/{id}
     controller: App\Controller\AdminController::updateRole
     methods: ['POST']
+
+
+

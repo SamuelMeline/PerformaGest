@@ -5,12 +5,56 @@
 
 {% block body %}
 	<div class="container">
-		<h1>Edit Patients</h1>
+		<h1>Modifier le dossier médical</h1>
 
-		{{ include('Patients/_form.html.twig', {'button_label': 'Modifier'}) }}
+		{{ form_start(form) }}
 
-		<a class="btn btn-warning mb-3" href="{{ path('app_Patients_index') }}">Retourner a la liste</a>
+		<div class="info-biometrique">
+			<h2>Informations biometriques</h2>
+			<div>
+				{{ form_row(form.lastname) }}
+				{{ form_row(form.firstName) }}
+				{{ form_row(form.birthdate) }}
+				{{ form_row(form.bloodgroup) }}
+				{{ form_row(form.size) }}
+				{{ form_row(form.weight) }}
+			</div>
+		</div>
+		<hr>
+		<div class="info-medicales">
+			<h2>Informations médicales</h2>
+			<div>
+				{{ form_row(form.antMedic) }}
+				{{ form_row(form.allergies) }}
+				{{ form_row(form.vaccins) }}
+				{{ form_row(form.tabac) }}
+				{{ form_row(form.alcool) }}
+				{{ form_row(form.stupefiants) }}
+				{{ form_row(form.sommeil) }}
+				{{ form_row(form.alimentation) }}
+				{{ form_row(form.activitePhysique) }}
+				{{ form_row(form.employeur) }}
+			</div>
+			<hr>
+			<div class="emergency-contacts">
+				<h2>Contacts d'urgence</h2>
+				<button type="button" class="btn btn-success btn-ajouter" data-collection="#emergency-contacts">Ajouter un contact d'urgence</button>
+				<div class="list-group" id="emergency-contacts" data-index="{{ form.emergencyContacts|length > 0 ? form.emergencyContacts|last.vars.name + 1 : 0 }}" data-prototype="{{ form_widget(form.emergencyContacts.vars.prototype)|e('html_attr') }}"></div>
+				<div class="emergency-contacts-list">
+					{{ form_widget(form.emergencyContacts) }}
+					{% for contact in emergencyContacts %}
+						<a href="{{ path('app_patients_supprimer_contact', {id: patient.id, contactID: contact.id}) }}" class="btn btn-danger">Supprimer
+							{{ contact.firstname }}
+							{{contact.lastname}}</a>
+					{% endfor %}
+				</div>
+				{{ form_end(form) }}
 
-		{{ include('Patients/_delete_form.html.twig') }}
-	</div>
-{% endblock %}
+				<div class="form-actions">
+					<button type="submit" class="btn btn-primary">Modifier le dossier médical</button>
+					<a class="btn btn-danger" href="{{ path('app_patients_index') }}">Retour à la liste</a>
+				</div>
+
+			</div>
+			<script src="{{ asset('js/emergency_contacts.js') }}"></script>
+		{% endblock %}

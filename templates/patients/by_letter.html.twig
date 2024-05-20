@@ -1,34 +1,44 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Patients - Lettre {{ letter }}{% endblock %}
+{% block title %}Patients - Lettre
+	{{ letter }}
+{% endblock %}
 
 {% block body %}
-    <h1>Patients - Lettre {{ letter }}</h1>
+	<div class="container">
+		<h1>Patients - Lettre
+			{{ letter }}</h1>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Prénom</th>
-                <th>Nom</th>
-                <th>Email</th>
-                <th>Téléphone</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for patient in patients %}
-                <tr>
-                    <td>{{ patient.firstName }}</td>
-                    <td>{{ patient.lastName }}</td>
-                    <td>
-                        <a href="{{ path('app_patients_show', {id: patient.id}) }}">Voir</a>
-                        <a href="{{ path('app_patients_edit', {id: patient.id}) }}">Éditer</a>
-                        <a href="{{ path('app_patients_delete', {id: patient.id}) }}" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce dossier ?');">Supprimer</a>
-                    </td>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-
-    <a href="{{ path('app_patients_index') }}">Retour à la liste complète</a>
+		<table class="table">
+			<thead>
+				<tr>
+					<th>Prénom</th>
+					<th>Nom</th>
+					<th>Date de naissance</th>
+					<th>Voir</th>
+					<th>Éditer</th>
+					<th>Supprimer</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for patient in patients %}
+					<tr>
+						<td>{{ patient.firstName }}</td>
+						<td>{{ patient.lastName }}</td>
+						<td>{{ patient.birthdate|date('d/m/Y') }}</td>
+						<td>
+							<a href="{{ path('app_patients_show', {id: patient.id}) }}">Voir</a>
+						</td>
+						<td>
+							<a href="{{ path('app_patients_edit', {id: patient.id}) }}">Éditer</a>
+						</td>
+						<td>
+							<a href="{{ path('app_patients_delete', {id: patient.id}) }}" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce dossier ?');">Supprimer</a>
+						</td>
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+		<a href="{{ path('app_patients_index') }}">Retour à la liste complète</a>
+	</div>
 {% endblock %}

@@ -1,20 +1,54 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}New Patients
+{% block title %}Créer un nouveau dossier médical
 {% endblock %}
 
 {% block body %}
 	<div class="container">
-		<h1>Create new Patients</h1>
+		<h1>Créer un nouveau dossier médical</h1>
+
+		{{ form_start(form) }}
 
 		<div class="info-biometrique">
 			<h2>Informations biometriques</h2>
-				<div>
-					{{ include('patients/_form.html.twig') }}
-				</div>
+			<div>
+				{{ form_row(form.lastname) }}
+				{{ form_row(form.firstName) }}
+				{{ form_row(form.birthdate) }}
+				{{ form_row(form.bloodgroup) }}
+				{{ form_row(form.size) }}
+				{{ form_row(form.weight) }}
+			</div>
 		</div>
+		<hr>
+		<div class="info-medicales">
+			<h2>Informations médicales</h2>
+			<div>
+				{{ form_row(form.antMedic) }}
+				{{ form_row(form.allergies) }}
+				{{ form_row(form.vaccins) }}
+				{{ form_row(form.tabac) }}
+				{{ form_row(form.alcool) }}
+				{{ form_row(form.stupefiants) }}
+				{{ form_row(form.sommeil) }}
+				{{ form_row(form.alimentation) }}
+				{{ form_row(form.activitePhysique) }}
+				{{ form_row(form.employeur) }}
+			</div>
+			<hr>
+			<div class="emergency-contacts">
+				<h2>Contacts d'urgence</h2>
+				<button type="button" class="btn btn-success btn-ajouter" data-collection="#emergency-contacts">Ajouter un contact d'urgence</button>
+				<div class="list-group" id="emergency-contacts" data-index="{{ form.emergencyContacts|length > 0 ? form.emergencyContacts|last.vars.name + 1 : 0 }}" data-prototype="{{ form_widget(form.emergencyContacts.vars.prototype)|e('html_attr') }}"></div>
+				<hr>
+			</div>
 
+			<div class="form-actions">
+				<button type="submit" class="btn btn-primary">Créer le dossier médical</button>
+				<a class="btn btn-danger" href="{{ path('app_patients_index') }}">Retour à la liste</a>
+			</div>
 
-		<a class="btn btn-danger" href="{{ path('app_patients_index') }}">Retour a la liste</a>
-	</div>
-{% endblock %}
+			{{ form_end(form) }}
+		</div>
+		<script src="{{ asset('js/emergency_contacts.js') }}"></script>
+	{% endblock %}

@@ -1,0 +1,102 @@
+/* Dossier médicaux */
+
+.dossier-med {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.alphabet-container {
+	display: flex;
+	justify-content: center;
+}
+
+.alphabet {
+	display: grid;
+	grid-template-columns: repeat(4, auto);
+	gap: 15px;
+}
+
+.letter {
+	text-align: center;
+	font-size: 25px;
+	margin-right: 160px;
+}
+
+.dossier-med h1 {
+	text-align: center;
+    margin: 0 auto;
+	margin-top: 30px;
+	margin-bottom: 30px;
+}
+
+div.new-patient {
+    margin-left: 215px;
+    margin-bottom: 30px;
+}
+
+.flex {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.row div {
+    width: 20%;
+    margin: 0 auto;
+}
+
+/* Nouveau patient */
+
+.container {
+    margin: 0 auto;
+    max-width: 1200px;
+    padding: 20px;
+    background-color: #333;
+    border-radius: 8px;
+    color: #f8f9fa;
+}
+
+h1, h2 {
+    text-align: center;
+    color: #00FFFF;
+}
+
+.info-biometrique, .important-info, .emergency-contact {
+    border: 1px solid #00FFFF;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    background-color: #1c1c1c;
+}
+
+.form-actions {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.table {
+    width: 100%;
+    margin-bottom: 1rem;
+    color: #212529;
+}
+
+.table th, .table td {
+    padding: 0.75rem;
+    vertical-align: top;
+    border-top: 1px solid #dee2e6;
+}
+
+.table thead th {
+    vertical-align: bottom;
+    border-bottom: 2px solid #dee2e6;
+}
+
+.table tbody + tbody {
+    border-top: 2px solid #dee2e6;
+}
+
+.table .table {
+    background-color: #1c1c1c;
+}
+

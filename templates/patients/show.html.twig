@@ -1,52 +1,99 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Patients
+{% block title %}Dossier médical de
+	{{ patient.firstName }}
+	{{ patient.lastName }}
 {% endblock %}
 
 {% block body %}
-	<div class="container">
-		<h1>Patients</h1>
+	<div class="dossier-med">
+		<h1>Dossier médical de
+			{{ patient.firstName }}
+			{{ patient.lastName }}</h1>
+		<div class="row">
+			<div class="w-50">
+				<h2>Informations personnelles</h2>
+				<p>
+					<strong>Prénom :</strong>
+					{{ patient.firstName }}</p>
+				<p>
+					<strong>Nom :</strong>
+					{{ patient.lastName }}</p>
+				<p>
+					<strong>Date de naissance :</strong>
+					{{ patient.birthdate|date('d/m/Y') }}</p>
+				<p>
+					<strong>Groupe sanguin :</strong>
+					{{ patient.bloodgroup }}</p>
+				<p>
+					<strong>Taille :</strong>
+					{{ patient.size }}</p>
+				<p>
+					<strong>Poids :</strong>
+					{{ patient.weight }}</p>
 
-		<table class="table">
-			<tbody>
-				<tr>
-					<th>Id</th>
-					<td>{{ patient.id }}</td>
-				</tr>
-				<tr>
-					<th>Name</th>
-					<td>{{ patient.name }}</td>
-				</tr>
-				<tr>
-					<th>Description</th>
-					<td>{{ patient.description }}</td>
-				</tr>
-				<tr>
-					<th>Image</th>
-					<td>{{ patient.image }}</td>
-				</tr>
-				<tr>
-					<th>Price</th>
-					<td>{{ patient.price }}</td>
-				</tr>
-				<tr>
-					<th>Slug</th>
-					<td>{{ patient.slug }}</td>
-				</tr>
-				<tr>
-					<th>CreatedAt</th>
-					<td>{{ patient.createdAt ? Patient.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-				</tr>
-			</tbody>
-		</table>
+				<h2>Informations médicales</h2>
+				<p>
+					<strong>Antécédents médicaux :</strong>
+					{{ patient.antMedic }}</p>
+				<p>
+					<strong>Allergies :</strong>
+					{{ patient.allergies }}</p>
+				<p>
+					<strong>Vaccins :</strong>
+					{{ patient.vaccins }}</p>
+				<p>
+					<strong>Tabac :</strong>
+					{{ patient.tabac }}</p>
+				<p>
+					<strong>Alcool :</strong>
+					{{ patient.alcool }}</p>
+				<p>
+					<strong>Stupéfiants :</strong>
+					{{ patient.stupefiants }}</p>
+				<p>
+					<strong>Sommeil :</strong>
+					{{ patient.sommeil }}</p>
+				<p>
+					<strong>Alimentation :</strong>
+					{{ patient.alimentation }}</p>
+				<p>
+					<strong>Activité physique :</strong>
+					{{ patient.activitePhysique }}</p>
+				<p>
+					<strong>Employeur :</strong>
+					{{ patient.employeur }}</p>
 
-		<a class="btn btn-secondary mb-3" href="{{ path('app_Patients_index') }}">Retour a la liste</a>
+				<h2>Contacts d'urgence</h2>
+				<ul>
+					{% for contact in patient.emergencyContacts %}
+						<li>{{ contact.lastName }}
+							-
+							{{ contact.firstName }}
+							-
+							{{ contact.phone }}
+							-
+							{{ contact.relationship }}
+						</li>
+					{% endfor %}
+				</ul>
 
-		<a class="btn btn-warning mb-3" href="{{ path('app_Patients_edit', {'id': patient.id}) }}">Modifier</a>
-
-		<a class="btn btn-warning mb-3" href="{{ path('app_comments_Patient', {'id': patient.id}) }}">Voir les commentaires</a>
-
-
-		{{ include('Patients/_delete_form.html.twig') }}
+			</div>
+			<div class="w-50">
+				<h2>Visites médicales</h2>
+				<ul>
+					{# {% for visit in patient.visits %}
+																<li>{{ visit.date|date('d/m/Y') }}
+																	-
+																	{{ visit.description }}</li>
+															{% endfor %} #}
+				</ul>
+			</div>
+		</div>
+		<div class="actions">
+			<a href="{{ path('app_patients_edit', {id: patient.id}) }}" class="btn btn-primary">Éditer</a>
+			<a href="{{ path('app_patients_delete', {id: patient.id}) }}" class="btn btn-danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce dossier ?');">Supprimer</a>
+			<a href="{{ path('app_patients_index') }}" class="btn btn-secondary">Retour à la liste</a>
+		</div>
 	</div>
 {% endblock %}

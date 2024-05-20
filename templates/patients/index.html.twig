@@ -1,16 +1,33 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Dossiers Médicaux{% endblock %}
+{% block title %}Dossiers Médicaux
+{% endblock %}
 
 {% block body %}
-    <h1>Dossiers Médicaux</h1>
-    <div class="alphabet">
-        {% for letter in letters %}
-            <a href="{{ path('app_patients_by_letter', {letter: letter}) }}">{{ letter }}</a>
-        {% endfor %}
-    </div>
-
-    <div class="new-patient">
-        <a href="{{ path('app_patient_new') }}" class="btn btn-primary">Créer un nouveau dossier médical</a>
-    </div>
+	<div class="dossier-med">
+		<h1>Dossiers Médicaux</h1>
+		<div class="new-patient">
+			<a href="{{ path('app_patient_new') }}" class="btn btn-primary">Créer un nouveau dossier médical</a>
+		</div>
+		<div class="alphabet-container">
+			<div class="alphabet">
+				{% for letter in letters %}
+					<div class="letter">
+						<a href="{{ path('app_patients_by_letter', {letter: letter}) }}">{{ letter }}
+							-</a>
+					</div>
+				{% endfor %}
+			</div>
+		</div>
+		<hr>
+		<div class="row">
+        <div class="w-20">
+			<h2>Visite médicale</h2>
+			<a href="">certificats médicaux</a>
+        </div>
+        <div class="w-20">
+			<h2>Morgue</h2>
+			<a href="">Décédés</a>
+		</div>
+	</div>
 {% endblock %}
